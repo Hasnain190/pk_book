@@ -11,7 +11,7 @@ export default function Comment({
 }) {
   return (
     <div className="w-full">
-      <div className="flex justify-evenly w-full">
+      <div className="flex  justify-evenly w-full">
         {/* like button */}
         <Like likeCount={likeCount} />
         {/* comment button */}
