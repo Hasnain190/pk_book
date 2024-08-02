@@ -1,22 +1,66 @@
-import React from "react";
+"use client";
+import React, { useState, useTransition } from "react";
 import CommentIcon from "../assets/speech-bubble_10904397.png";
 import Image from "next/image";
 import Like from "./Like";
+import { TComment } from "@/Types";
+import SendIcon from "../assets/send-button_16955203.png";
+import { useRouter } from "next/navigation";
+import CommentsSection from "./CommentsSection";
+
 export default function Comment({
-  comments,
+ comments,
   likeCount,
+  postId
 }: {
-  comments: string[];
+  comments: TComment[];
   likeCount: number;
+  postId: number
 }) {
+  const [comment, setComment] = useState("");
+   const [isPending, startTransition] = useTransition();
+  const router = useRouter()
+  const commentButtonClickHandler = () => {
+    console.log("comment button clicked");
+  };
+
+  const submitButtonHandler = async () => {
+    if (!comment.trim()) return;
+
+    
+
+    try {
+      const response = await fetch("/api/comments", {
+        method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+        body: JSON.stringify({ content: comment, postId }),
+      });
+
+      if (response.ok) {
+        await response.json();
+        setComment("");
+        startTransition(() => {
+          router.refresh();
+        });
+        
+
+      } else {
+        console.error("Failed to submit comment");
+      }
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    }
+  };
   return (
     <div className="w-full">
       <div className="flex  justify-evenly w-full">
         {/* like button */}
-        <Like likeCount={likeCount} />
+        <Like likeCount={likeCount} postId={postId} /> 
         {/* comment button */}
         <div className="flex gap-2 items-center">
-          <button className="text-blue-500">
+          <button className="text-blue-500" onClick={commentButtonClickHandler}>
             <Image
               src={CommentIcon}
               alt="Upload your photo"
@@ -24,19 +68,34 @@ export default function Comment({
               height="30"
             />
           </button>
-          <span className=""> {comments.length}</span>
+          <span className=""> {comments?.length || 0}</span>
+        </div>
+      </div>
+      <div>
+        <div className="flex">
+          <input
+            className="w-full h-10 ps-2 focus:outline-none bottom-2"
+            type="text"
+            placeholder="Add a comment"
+            value={comment}
+            onKeyDown={(e) => e.key === "Enter" && submitButtonHandler()}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <span>
+            <button
+              className="text-blue-500"
+              type="submit"
+              onClick={submitButtonHandler}
+            >
+              <Image src={SendIcon} alt="submit" width="48" height="48" />
+            </button>
+          </span>
         </div>
       </div>
 
-      {/* comments */}
-      <div className="flex flex-col">
-        {comments.map((comment, index) => (
-          <div key={index}>
-            {" "}
-            <span className="ml-2">{comment}</span>
-          </div>
-        ))}
-      </div>
+     <CommentsSection postId={postId} comments={comments} />
+           {isPending && <div>Refreshing comments...</div>}
+
     </div>
   );
 }
