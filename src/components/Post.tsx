@@ -28,6 +28,7 @@ export default async function Post(props: TPost) {
           <div className="ml-2 text-sm text-gray-600">{postingDate}</div>
         </div>
       </div>
+      
       <Photo photo={photo} />
       <Comment likeCount={likeCount} comments={comments} postId={postId} />
     </div>

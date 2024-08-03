@@ -2,6 +2,9 @@ import Post from "@/components/Post";
 import Uploader from "@/components/Uploader";
 import prisma from '../../lib/prisma'
 
+import UploadingShimmer from "@/components/UploadingShimmer";
+import UploaderAndShimmer from "@/components/UploaderAndShimmer";
+
 
 
 export default async function Home() {
@@ -26,7 +29,10 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1 className="text-5xl font-bold mb-5">PK Book</h1>
+{/* 
       <Uploader />
+      <UploadingShimmer isPending={true} /> */}
+      <UploaderAndShimmer />
       {posts.length >0 ? posts.map((post, index) => 
       
       <Post id={post.id} key={index} photo={post.image} likes={post.likes} uploadedAt={post.uploadedAt} />) : <p>No posts</p>

@@ -7,8 +7,7 @@ import { TComment } from "@/Types";
 import SendIcon from "../assets/send-button_16955203.png";
 import { useRouter } from "next/navigation";
 import CommentsSection from "./CommentsSection";
-import { Shimmer } from "react-shimmer-loader";
-import ClientShimmer from "./ClientShimmer";
+import ClientShimmer from "./Shimmer";
 export default function Comment({
   comments,
   likeCount,
@@ -100,7 +99,7 @@ export default function Comment({
 
       <CommentsSection postId={postId} comments={comments} />
       {isPending && (
-        <ClientShimmer width={200} height={20}/>
+        <ClientShimmer />
          
         
       )}

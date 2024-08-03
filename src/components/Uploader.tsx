@@ -3,20 +3,12 @@ import { CldUploadWidget } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 import CameraIcon from "../assets/camera_2668896.png";
 import Image from "next/image";
-import { useTransition } from "react";
-
-import ClientShimmer from "./ClientShimmer";
-
-const uploadingShimmer = () => {
-  return (
-    <div className="w-full flex justify-center ">
-      <ClientShimmer width={100} height={100} />
-    </div>
-  );
+import { useTransition , useEffect} from "react";
 
 
 
-export default function Uploader() {
+
+export default function Uploader({onPendingChange}:{onPendingChange:(pendingState:boolean)=>void}) {
   const [isPending, startTransition] = useTransition();
 
   let router = useRouter();
@@ -31,8 +23,16 @@ export default function Uploader() {
       });
 
 
+      if (res.ok) {
+     
+        startTransition(() => {
+           router.refresh();
+        });
 
-      router.refresh();
+      }
+
+     
+
     } catch (error) {
       console.log("Error uploading image:", error);
     }
@@ -54,6 +54,10 @@ export default function Uploader() {
   //         className: 'error-toast'
   //     })
   // }
+
+  useEffect(() => {
+    onPendingChange(isPending);
+  }, [isPending, onPendingChange]);
 
   return (
     <CldUploadWidget
