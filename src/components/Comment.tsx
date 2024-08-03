@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import CommentsSection from "./CommentsSection";
 import ClientShimmer from "./ClientShimmer";
 export default function Comment({
-  comments,
+  comments:initialComments,
   likeCount,
   postId,
 }: {
@@ -18,6 +18,7 @@ export default function Comment({
   postId: number;
 }) {
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState<TComment[]>(initialComments);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -38,7 +39,9 @@ export default function Comment({
       });
 
       if (response.ok) {
+        const newComment = await response.json();
         setComment("");
+        setComments([...comments, newComment]);
         startTransition(() => {
           router.refresh();
         });
