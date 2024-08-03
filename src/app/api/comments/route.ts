@@ -3,11 +3,11 @@ import prisma from "../../../../lib/prisma";
 
 export async function POST(request: Request) {
   try {
-    const { content, postId } = await request.json();
+    const { content, postId }: { content: string; postId: number } = await request.json();
     const comment = await prisma.comment.create({
       data: {
         postId,
-        content
+        content,
       },
     });
     return NextResponse.json(comment, { status: 201 });
