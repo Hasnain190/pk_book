@@ -1,30 +1,41 @@
 "use client";
 import { CldUploadWidget } from "next-cloudinary";
 import { useRouter } from "next/navigation";
+import CameraIcon from "../assets/camera_2668896.png";
+import Image from "next/image";
+import { useTransition } from "react";
+
+import ClientShimmer from "./ClientShimmer";
+
+const uploadingShimmer = () => {
+  return (
+    <div className="w-full flex justify-center ">
+      <ClientShimmer width={100} height={100} />
+    </div>
+  );
+
+
 
 export default function Uploader() {
-  
-let router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  let router = useRouter();
   const onUploadSuccessHandler = async (result: any) => {
-    
-   
     try {
-       const res =  await fetch("api/upload", {
-          method: "POST",
-          headers: {
+      const res = await fetch("api/upload", {
+        method: "POST",
+        headers: {
           "Content-Type": "application/json",
         },
-          body: JSON.stringify({ result: result }),
-        });
+        body: JSON.stringify({ result: result }),
+      });
 
-router.refresh();
 
-        
+
+      router.refresh();
     } catch (error) {
-        console.log("Error uploading image:", error)
+      console.log("Error uploading image:", error);
     }
-
-    
 
     // onValueChange(result?.info?.public_id)
 
@@ -55,7 +66,22 @@ router.refresh();
       // onError={onUploadErrorHandler}
     >
       {({ open }) => {
-        return <button className="bg-blue-500 text-white m-1 p-2 rounded-lg cursor-pointer fixed bottom-10 left-1" onClick={() => open()}>Upload an Image</button>;
+        return (
+          <button
+            className="bg-blue-500 text-white m-1 p-2 rounded-lg cursor-pointer fixed bottom-10 left-1"
+            onClick={() => open()}
+          >
+            <div className="flex gap-2 items-center">
+              <Image
+                src={CameraIcon}
+                alt="Camera Icon"
+                width={30}
+                height={30}
+              />
+              Upload an Image
+            </div>
+          </button>
+        );
       }}
     </CldUploadWidget>
   );

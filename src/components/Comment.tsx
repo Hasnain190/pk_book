@@ -7,57 +7,56 @@ import { TComment } from "@/Types";
 import SendIcon from "../assets/send-button_16955203.png";
 import { useRouter } from "next/navigation";
 import CommentsSection from "./CommentsSection";
-
+import { Shimmer } from "react-shimmer-loader";
+import ClientShimmer from "./ClientShimmer";
 export default function Comment({
- comments,
+  comments,
   likeCount,
-  postId
+  postId,
 }: {
   comments: TComment[];
   likeCount: number;
-  postId: number
+  postId: number;
 }) {
   const [comment, setComment] = useState("");
-   const [isPending, startTransition] = useTransition();
-  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const commentButtonClickHandler = () => {
     console.log("comment button clicked");
   };
 
   const submitButtonHandler = async () => {
     if (!comment.trim()) return;
-
-    
-
+    setIsSubmitting(true);
     try {
       const response = await fetch("/api/comments", {
         method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ content: comment, postId }),
       });
 
       if (response.ok) {
-        await response.json();
         setComment("");
         startTransition(() => {
           router.refresh();
         });
-        
-
       } else {
         console.error("Failed to submit comment");
       }
     } catch (error) {
       console.error("Error submitting comment:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
     <div className="w-full">
       <div className="flex  justify-evenly w-full">
         {/* like button */}
-        <Like likeCount={likeCount} postId={postId} /> 
+        <Like likeCount={likeCount} postId={postId} />
         {/* comment button */}
         <div className="flex gap-2 items-center">
           <button className="text-blue-500" onClick={commentButtonClickHandler}>
@@ -76,6 +75,7 @@ export default function Comment({
           <input
             className="w-full h-10 ps-2 focus:outline-none bottom-2"
             type="text"
+            disabled={isSubmitting}
             placeholder="Add a comment"
             value={comment}
             onKeyDown={(e) => e.key === "Enter" && submitButtonHandler()}
@@ -86,16 +86,24 @@ export default function Comment({
               className="text-blue-500"
               type="submit"
               onClick={submitButtonHandler}
+              disabled={isSubmitting}
             >
-              <Image src={SendIcon} alt="submit" width="48" height="48" />
+              {isSubmitting ? (
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+              ) : (
+                <Image src={SendIcon} alt="submit" width="48" height="48" />
+              )}
             </button>
           </span>
         </div>
       </div>
 
-     <CommentsSection postId={postId} comments={comments} />
-           {isPending && <div>Refreshing comments...</div>}
-
+      <CommentsSection postId={postId} comments={comments} />
+      {isPending && (
+        <ClientShimmer width={200} height={20}/>
+         
+        
+      )}
     </div>
   );
 }
