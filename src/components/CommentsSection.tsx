@@ -22,9 +22,9 @@ export default function CommentsSection({
       <div className="flex flex-col">
         {comments && comments.length > 0 ? (
           comments.map((comment, index) => (
-            <div key={index}>
-              {" "}
-              <span className="ml-2">{comment.content}</span>
+            <div key={index}> 
+              <p className="ml-2 rounded-lg border  p-2 bg-gray-200 mb-2 max-w-fit">{comment.content}</p>
+            
             </div>
           ))
         ) : (

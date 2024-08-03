@@ -1,7 +1,11 @@
 
 'use client';
+import dynamic from 'next/dynamic';
 
-import { Shimmer } from 'react-shimmer-loader';
+const ShimmerWrapper = dynamic(
+  ()=> import('./ShimmerWrapper'),
+  {ssr: false}
+)
 
 export default function UploadingShimmer(
     {isPending=false}:
@@ -13,9 +17,9 @@ export default function UploadingShimmer(
     <>
     {isPending ?
 
-       <Shimmer width={500} height={400} >
+       <ShimmerWrapper width={500} height={400} >
         <p>Loading...</p>
-        </Shimmer>
+        </ShimmerWrapper>
         :
         <></>
     }

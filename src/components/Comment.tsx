@@ -7,7 +7,7 @@ import { TComment } from "@/Types";
 import SendIcon from "../assets/send-button_16955203.png";
 import { useRouter } from "next/navigation";
 import CommentsSection from "./CommentsSection";
-import ClientShimmer from "./Shimmer";
+import ClientShimmer from "./ClientShimmer";
 export default function Comment({
   comments,
   likeCount,
@@ -72,7 +72,7 @@ export default function Comment({
       <div>
         <div className="flex">
           <input
-            className="w-full h-10 ps-2 focus:outline-none bottom-2"
+            className="w-full h-10 ps-2 focus:outline-none bottom-2 bg-gray-200 ml-2 border border-gray-300 rounded-lg  "
             type="text"
             disabled={isSubmitting}
             placeholder="Add a comment"
