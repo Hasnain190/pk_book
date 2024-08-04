@@ -32,11 +32,10 @@ export default function Uploader({
       startTransition(() => {
         router.refresh();
       });
-       toast({
-          title: "Image uploaded Successfully",
-          description: "Wait while we load that image",
-        })
-
+      toast({
+        title: "Image uploaded Successfully",
+        description: "Wait while we load that image",
+      });
 
       onPendingChange(false);
     } catch (error) {
@@ -47,7 +46,7 @@ export default function Uploader({
     toast({
       title: "Error uploading image",
       description: "Please try again",
-    })
+    });
   };
 
   return (

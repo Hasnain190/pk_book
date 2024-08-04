@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import LikeIcon from "../assets/hand_14873865.png";
 import Image from "next/image";
+import incrementLike from "@/app/actions/like";
 export default function Like({
   likeCount: initialLikeCount,
   postId,
@@ -15,10 +16,10 @@ export default function Like({
   const likeButtonClickHandler = async () => {
     setLikeCount(likeCount + 1);
 
-    await fetch("/api/likes", {
-      method: "PATCH",
-      body: JSON.stringify({ likeCount, postId: postId }),
-    });
+    await incrementLike({ likeCount: likeCount + 1, postId: postId });
+
+   
+    
   };
 
   return (

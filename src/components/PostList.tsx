@@ -1,8 +1,7 @@
 // components/PostManager.tsx
 
 
-import { useState } from 'react';
-import Uploader from './Uploader';
+
 import Post from './Post';
 import { TPost } from '@/Types';
 
