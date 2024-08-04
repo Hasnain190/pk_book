@@ -9,7 +9,7 @@ import CommentsSection from "./CommentsSection";
 import ClientShimmer from "./ClientShimmer";
 import { revalidatePath } from "next/cache";
 import { useState, useTransition } from "react";
-
+import { useToast } from "./ui/use-toast";
 export default function Comment({
   comments:initialComments,
   likeCount,
@@ -19,7 +19,7 @@ export default function Comment({
   likeCount: number;
   postId: number;
 }) {
-
+  const { toast } = useToast();
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<TComment[]>(initialComments);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,6 +40,9 @@ export default function Comment({
       });
 
       if (response.ok) {
+        toast({
+          title: "Comment submitted",
+        })
         const newComment = await response.json();
         setComment("");
         setComments([...comments, newComment]);
@@ -49,6 +52,10 @@ export default function Comment({
       }
     } catch (error) {
       console.error("Error submitting comment:", error);
+      toast({
+        title: "Error submitting comment",
+        description: "Please try again",
+      })
     } finally {
       setIsSubmitting(false);
     }
