@@ -8,17 +8,21 @@ const ShimmerWrapper = dynamic(
 )
 
 export default function UploadingShimmer(
-   
+    {isPending=false}:
+
+    {isPending:boolean}
 
 ) {
   return (
     <>
- 
+    {isPending ?
 
        <ShimmerWrapper width={500} height={400} >
         <p>Loading...</p>
         </ShimmerWrapper>
-      
+        :
+        <></>
+    }
     </>
   );
 }

@@ -1,15 +1,17 @@
 import Post from "@/components/Post";
 import Uploader from "@/components/Uploader";
 import prisma from "../../lib/prisma";
-import NewPostHandler from "@/components/NewPostHandler";
 import UploadingShimmer from "@/components/UploadingShimmer";
+import { revalidatePath } from "next/cache";
 import PostList from "@/components/PostList";
+import UploaderAndShimmer from "@/components/UploaderAndShimmer";
 
 export default async function Home() {
   const getPosts = await prisma.post.findMany({
     orderBy: {
       uploadedAt: "desc",
     },
+    take: 10,
   });
 
   const posts = getPosts.map((post) => {
@@ -24,9 +26,9 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1 className="text-5xl font-bold mb-5">PK Book</h1>
-      
+      <UploaderAndShimmer />
     
-      <NewPostHandler />
+  
       <PostList initialPosts={posts} />
     </main>
   );

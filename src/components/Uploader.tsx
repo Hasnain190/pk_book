@@ -4,22 +4,22 @@ import { useRouter } from "next/navigation";
 import CameraIcon from "../assets/camera_2668896.png";
 import Image from "next/image";
 
-import { TPost } from "@/Types";
+import { useToast } from "@/components/ui/use-toast";
 
+import { TPost } from "@/Types";
+import { startTransition, useState } from "react";
 
 export default function Uploader({
- 
-  onNewPost
+  onPendingChange,
 }: {
- 
-  onNewPost: (newPost: TPost) => void;
- 
+  onPendingChange: (pendingState: boolean) => void;
 }) {
-const router = useRouter()
+  const { toast } = useToast();
+
+  const router = useRouter();
   const onUploadSuccessHandler = async (result: any) => {
+    onPendingChange(true);
     try {
-     
-     
       const res = await fetch("api/upload", {
         method: "POST",
         headers: {
@@ -29,31 +29,26 @@ const router = useRouter()
         cache: "no-cache",
       });
 
-      
+      startTransition(() => {
+        router.refresh();
+      });
+       toast({
+          title: "Image uploaded Successfully",
+          description: "Wait while we load that image",
+        })
 
-      
-        const newPost = await res.json();
-        console.log(newPost)
-        onNewPost(newPost);
 
-        router.refresh()
-       
-      
-      
-
-     
-     
+      onPendingChange(false);
     } catch (error) {
       console.log("Error uploading image:", error);
     }
-
-    // onValueChange(result?.info?.public_id)
   };
   const onUploadErrorHandler = () => {
-    alert("Failed to upload image");
+    toast({
+      title: "Error uploading image",
+      description: "Please try again",
+    })
   };
-
- 
 
   return (
     <CldUploadWidget
@@ -69,7 +64,7 @@ const router = useRouter()
         return (
           <button
             className="bg-blue-500 text-white m-1 p-2 rounded-lg cursor-pointer fixed bottom-10 left-1"
-            onClick={() => {open(); console.log("button clicked")} }
+            onClick={() => open()}
           >
             <div className="flex gap-2 items-center">
               <Image
