@@ -20,9 +20,9 @@ export default async function Post(props: TPost) {
   let postingDate =  uploadedAt?.toString() || 'Date not mentioned';
 
   return (
-    <div className="border mb-4 pb-4 rounded-sm bg-white w-[500px] flex  flex-col  content-center ">
+    <div className="border mb-4 pb-4 rounded-sm bg-white  flex  flex-col  content-center ">
       <div className=" m-2 flex">
-        <div className="rounded-full bg-[#f3f3f3] w-[40px] h-[40px]"></div>
+        <div className="rounded-full bg-[#f3f3f3] w-[40px] h-[40px] "></div>
         <div className="flex flex-col">
           <div className="ml-2">You posted a photo </div>
           <div className="ml-2 text-sm text-gray-600">{postingDate}</div>
