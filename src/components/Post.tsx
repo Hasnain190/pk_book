@@ -6,7 +6,7 @@ import { TPost } from "@/Types";
 import prisma from "../../lib/prisma";
 
 export default async function Post(props: TPost) {
-  let photo = props.photo;
+  let photo = props.image;
   let likeCount = props.likes;
   let postId = props.id;
   let uploadedAt = props.uploadedAt;

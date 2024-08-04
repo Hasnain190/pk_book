@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "../../../../lib/prisma";
 import { v2 as cloudinary } from "cloudinary";
 import { debug } from "console";
+import { revalidatePath } from "next/cache";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -22,8 +23,9 @@ export async function POST(request: Request) {
       },
     });
     console.log(post)
+    await revalidatePath("/");
 
-    return NextResponse.json({ success: true, post }, { status: 200 });
+    return NextResponse.json( post , { status: 200 });
   } catch (error) {
     
     return NextResponse.json({

@@ -1,6 +1,6 @@
 export type TPost = {
   id: number;
-  photo: string;
+  image: string;
   likes: number;
   uploadedAt?: string | Date;
   comments?: TComment[];
